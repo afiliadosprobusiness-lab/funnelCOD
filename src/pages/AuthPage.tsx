@@ -27,7 +27,10 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const user = useAuthUser();
-  const [activeTab, setActiveTab] = useState("login");
+  const [activeTab, setActiveTab] = useState<"login" | "register">(() => {
+    const tab = new URLSearchParams(location.search).get("tab");
+    return tab === "register" ? "register" : "login";
+  });
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [registerForm, setRegisterForm] = useState({
     name: "",
@@ -51,6 +54,13 @@ export default function AuthPage() {
       navigate(redirectPath, { replace: true });
     }
   }, [navigate, redirectPath, user]);
+
+  useEffect(() => {
+    const tab = new URLSearchParams(location.search).get("tab");
+    if (tab === "register" || tab === "login") {
+      setActiveTab(tab);
+    }
+  }, [location.search]);
 
   const handleGoogleLogin = (profile: GoogleProfile) => {
     const result = loginWithGoogle(profile);

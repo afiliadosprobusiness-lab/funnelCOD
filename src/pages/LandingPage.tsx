@@ -372,7 +372,8 @@ export default function LandingPage() {
   });
 
   const t = TEXT[language];
-  const dashboardTarget = user ? "/dashboard" : "/auth";
+  const signInTarget = user ? "/dashboard" : "/auth";
+  const startTarget = user ? "/dashboard" : "/auth?tab=register";
   const features = FEATURES[language];
   const steps = HOW_STEPS[language];
   const stories = STORIES[language];
@@ -489,14 +490,14 @@ export default function LandingPage() {
               variant="ghost"
               size="sm"
               className="text-slate-700 hover:bg-slate-100 hover:text-slate-900"
-              onClick={() => navigate(dashboardTarget)}
+              onClick={() => navigate(signInTarget)}
             >
               {t.nav.signIn}
             </Button>
             <Button
               size="sm"
               className="border-0 bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-[0_14px_30px_-20px_rgba(2,132,199,0.8)] hover:from-cyan-500 hover:to-blue-500"
-              onClick={() => navigate(dashboardTarget)}
+              onClick={() => navigate(startTarget)}
             >
               {t.nav.start} <ArrowRight className="ml-1 h-3.5 w-3.5" />
             </Button>
@@ -540,7 +541,7 @@ export default function LandingPage() {
               <Button
                 size="sm"
                 className="border-0 bg-gradient-to-r from-cyan-600 to-blue-600 text-white hover:from-cyan-500 hover:to-blue-500"
-                onClick={() => navigate(dashboardTarget)}
+                onClick={() => navigate(startTarget)}
               >
                 {t.nav.start}
               </Button>
@@ -573,7 +574,7 @@ export default function LandingPage() {
                 <Button
                   size="lg"
                   className="rounded-xl border-0 bg-gradient-to-r from-cyan-600 to-blue-600 px-7 py-6 text-base font-semibold text-white shadow-[0_18px_32px_-22px_rgba(2,132,199,0.9)] hover:from-cyan-500 hover:to-blue-500"
-                  onClick={() => navigate(dashboardTarget)}
+                  onClick={() => navigate(startTarget)}
                 >
                   {t.hero.cta} <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -581,7 +582,7 @@ export default function LandingPage() {
                   size="lg"
                   variant="outline"
                   className="rounded-xl border-slate-300 bg-white px-7 py-6 text-base text-slate-700 hover:bg-slate-50"
-                  onClick={() => navigate(dashboardTarget)}
+                  onClick={() => navigate(signInTarget)}
                 >
                   {t.hero.cta2}
                 </Button>
@@ -816,7 +817,7 @@ export default function LandingPage() {
                         ? "border-0 bg-gradient-to-r from-cyan-600 to-blue-600 text-white hover:from-cyan-500 hover:to-blue-500"
                         : "border border-slate-300 bg-white text-slate-800 hover:bg-slate-50",
                     )}
-                    onClick={() => navigate(dashboardTarget)}
+                    onClick={() => navigate(startTarget)}
                   >
                     {cta} <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -867,7 +868,7 @@ export default function LandingPage() {
                 <Button
                   size="lg"
                   className="rounded-xl border-0 bg-gradient-to-r from-cyan-600 to-blue-600 px-7 py-6 text-base font-semibold text-white hover:from-cyan-500 hover:to-blue-500"
-                  onClick={() => navigate(dashboardTarget)}
+                  onClick={() => navigate(startTarget)}
                 >
                   {t.nav.start} <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -875,7 +876,7 @@ export default function LandingPage() {
                   size="lg"
                   variant="outline"
                   className="rounded-xl border-slate-300 bg-white px-7 py-6 text-base text-slate-700 hover:bg-slate-50"
-                  onClick={() => navigate(dashboardTarget)}
+                  onClick={() => navigate(signInTarget)}
                 >
                   {t.nav.signIn}
                 </Button>
