@@ -20,5 +20,9 @@ export default function ProtectedRoute({ children, superadminOnly = false }: Pro
     return <Navigate to="/dashboard" replace />;
   }
 
+  if (!superadminOnly && isSuperadmin(user)) {
+    return <Navigate to="/superadmin" replace />;
+  }
+
   return <>{children}</>;
 }

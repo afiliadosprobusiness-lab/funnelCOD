@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,8 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
 import { toast } from "@/hooks/use-toast";
 import {
-  SUPERADMIN_DEFAULT_PASSWORD,
-  SUPERADMIN_EMAIL,
   ensureAuthSeed,
   loginWithGoogle,
   loginWithPassword,
@@ -48,15 +46,19 @@ export default function AuthPage() {
     return state.from || "/dashboard";
   }, [location.state]);
 
+  const getPostAuthPath = useCallback((role: "user" | "superadmin") => {
+    return role === "superadmin" ? "/superadmin" : redirectPath;
+  }, [redirectPath]);
+
   useEffect(() => {
     ensureAuthSeed();
   }, []);
 
   useEffect(() => {
     if (user) {
-      navigate(redirectPath, { replace: true });
+      navigate(getPostAuthPath(user.role), { replace: true });
     }
-  }, [navigate, redirectPath, user]);
+  }, [getPostAuthPath, navigate, user]);
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get("tab");
@@ -76,7 +78,7 @@ export default function AuthPage() {
       return;
     }
     toast({ title: "Welcome", description: `Signed in as ${result.user?.email}` });
-    navigate("/dashboard", { replace: true });
+    navigate(getPostAuthPath(result.user?.role || "user"), { replace: true });
   };
 
   const handleLoginSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -89,7 +91,7 @@ export default function AuthPage() {
       return;
     }
     toast({ title: "Welcome back", description: `Signed in as ${result.user?.email}` });
-    navigate(redirectPath, { replace: true });
+    navigate(getPostAuthPath(result.user?.role || "user"), { replace: true });
   };
 
   const handleRegisterSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -272,13 +274,6 @@ export default function AuthPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-slate-800 bg-slate-900/50">
-          <CardContent className="pt-6">
-            <p className="text-xs text-slate-300">Default superadmin access</p>
-            <p className="mt-1 text-xs text-slate-400">Email: {SUPERADMIN_EMAIL}</p>
-            <p className="text-xs text-slate-400">Password: {SUPERADMIN_DEFAULT_PASSWORD}</p>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

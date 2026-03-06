@@ -10,7 +10,7 @@ Users can:
 - Create and edit funnels.
 - Publish funnels according to selected plan limits.
 - Collect and manage COD orders.
-- Superadmin can manage user status and plans.
+- Superadmin can manage user status and plans from `/superadmin` only.
 
 The project remains frontend-only (no backend API).
 
@@ -56,10 +56,10 @@ The project remains frontend-only (no backend API).
 
 - `/`: marketing landing.
 - `/auth`: login/register (email-password + Google).
-- `/dashboard`: user funnels dashboard (protected).
-- `/editor/:id`: visual editor (protected + ownership check).
-- `/preview/:id`: preview mode (protected + ownership check).
-- `/orders`: orders table (protected, scoped by user unless superadmin).
+- `/dashboard`: user funnels dashboard (protected, non-superadmin only).
+- `/editor/:id`: visual editor (protected + ownership check, non-superadmin only).
+- `/preview/:id`: preview mode (protected + ownership check, non-superadmin only).
+- `/orders`: orders table (protected, non-superadmin only).
 - `/superadmin`: user admin console (protected, superadmin only).
 - `/f/:slug`: public published funnel.
 - `*`: 404 page.
@@ -83,7 +83,9 @@ Plans:
 1. User goes to `/auth`.
 2. User signs in with email/password or Google, or registers.
 3. Session is saved to `cod_session`.
-4. Protected routes become available.
+4. User role determines first route after auth:
+   - `user` -> `/dashboard`
+   - `superadmin` -> `/superadmin`
 
 ### Funnel management
 1. User creates funnel in dashboard.
@@ -92,7 +94,7 @@ Plans:
 
 ### Visual editing
 1. User opens `/editor/:id`.
-2. Editor validates ownership (unless superadmin).
+2. Editor validates ownership.
 3. User edits sections/elements and saves to localStorage.
 
 ### Publish and view
@@ -104,7 +106,7 @@ Plans:
 1. Visitor submits COD form in a published funnel.
 2. zod validates fields.
 3. Order is saved to `cod_orders` with status `new` and owner mapping.
-4. Owner (or superadmin) manages statuses in `/orders`.
+4. Owner manages statuses in `/orders`.
 
 ### Superadmin operations
 1. Superadmin logs in to `/auth`.

@@ -1,7 +1,7 @@
 # FunnelCOD - Contract
 
 Last updated: 2026-03-06
-Version: 1.2.0
+Version: 1.2.1
 
 ## 1) Scope
 
@@ -19,10 +19,10 @@ No HTTP API contract exists yet in this version.
 ### Public and app routes
 - `GET /`
 - `GET /auth`
-- `GET /dashboard` (auth required)
-- `GET /editor/:id` (auth required)
-- `GET /preview/:id` (auth required)
-- `GET /orders` (auth required)
+- `GET /dashboard` (auth required, non-superadmin)
+- `GET /editor/:id` (auth required, non-superadmin)
+- `GET /preview/:id` (auth required, non-superadmin)
+- `GET /orders` (auth required, non-superadmin)
 - `GET /superadmin` (auth + superadmin role required)
 - `GET /f/:slug`
 - Fallback `*` -> 404 UI
@@ -34,6 +34,7 @@ No HTTP API contract exists yet in this version.
 ### Route behavior guarantees
 - Protected routes redirect to `/auth` when no active session exists.
 - `/superadmin` redirects to `/dashboard` for non-superadmin users.
+- Superadmin users are redirected to `/superadmin` when trying to access `/dashboard`, `/editor/:id`, `/preview/:id`, or `/orders`.
 - `/editor/:id` and `/preview/:id` redirect to `/dashboard` if funnel is not found or user has no access.
 - `/f/:slug` renders "not found" UI when slug does not exist or funnel is unpublished.
 
@@ -154,6 +155,9 @@ type AppUser = {
 
 Rules:
 - A seed superadmin is always ensured.
+- Seed superadmin credentials are:
+  - Email: `afiliadosprobusiness@gmail.com`
+  - Password: `admin1234`
 - Superadmin cannot be deleted or deactivated by store actions.
 
 ### Key: `cod_session`
@@ -168,7 +172,7 @@ type AuthSession = {
 - `free`: can create funnels but cannot publish.
 - `pro`: can publish up to 2 funnels.
 - `master`: unlimited published funnels.
-- `superadmin`: bypasses plan publishing limits.
+- `superadmin`: plan limits are not applicable in UI because superadmin is restricted to `/superadmin`.
 
 ## 5) COD form validation contract
 
@@ -201,6 +205,10 @@ Non-breaking changes:
 - Adding new pages/routes without modifying current route signatures.
 
 ## 7) Changelog del Contrato
+
+- 2026-03-06: Updated superadmin access model to user-management only, added forced redirect to `/superadmin` from user routes, and updated seed superadmin credentials.
+  - Type: non-breaking
+  - Impact: superadmin no longer operates funnel/order user flows in UI and now uses the configured fixed credentials.
 
 - 2026-03-06: Added auth/session and user-management contract (`cod_users`, `cod_session`), plus superadmin protection.
   - Type: non-breaking

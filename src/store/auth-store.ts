@@ -7,8 +7,9 @@ const SESSION_KEY = "cod_session";
 const AUTH_EVENT = "cod_auth_changed";
 
 const SUPERADMIN_ID = "superadmin-root";
-export const SUPERADMIN_EMAIL = "superadmin@funnelcod.local";
-export const SUPERADMIN_DEFAULT_PASSWORD = "SuperAdmin#2026";
+const LEGACY_SUPERADMIN_EMAIL = "superadmin@funnelcod.local";
+export const SUPERADMIN_EMAIL = "afiliadosprobusiness@gmail.com";
+export const SUPERADMIN_DEFAULT_PASSWORD = "admin1234";
 
 type CurrentUserCache = {
   usersRaw: string | null;
@@ -62,19 +63,32 @@ function saveSession(session: AuthSession | null) {
 
 export function ensureAuthSeed() {
   const users = getUsers();
-  const existing = users.find((user) => user.id === SUPERADMIN_ID || user.email.toLowerCase() === SUPERADMIN_EMAIL);
+  const existing = users.find(
+    (user) =>
+      user.id === SUPERADMIN_ID ||
+      user.email.toLowerCase() === SUPERADMIN_EMAIL ||
+      user.email.toLowerCase() === LEGACY_SUPERADMIN_EMAIL,
+  );
   if (existing) {
-    const needsPatch = existing.role !== "superadmin" || existing.status !== "active";
+    const needsPatch =
+      existing.role !== "superadmin" ||
+      existing.status !== "active" ||
+      existing.provider !== "password" ||
+      existing.email.toLowerCase() !== SUPERADMIN_EMAIL ||
+      existing.passwordHash !== encodePassword(SUPERADMIN_DEFAULT_PASSWORD);
     if (needsPatch) {
       const patchedUsers = users.map((user) =>
         user.id === existing.id
           ? {
               ...user,
               id: SUPERADMIN_ID,
+              name: "Super Admin",
+              email: SUPERADMIN_EMAIL,
+              passwordHash: encodePassword(SUPERADMIN_DEFAULT_PASSWORD),
               role: "superadmin",
               status: "active",
               plan: "master",
-              provider: user.provider || "password",
+              provider: "password",
               updatedAt: new Date().toISOString(),
             }
           : user,
@@ -217,6 +231,9 @@ export function loginWithGoogle(profile: GoogleProfile): AuthActionResult {
   const existing = findUserByEmail(email);
 
   if (existing) {
+    if (existing.role === "superadmin") {
+      return { ok: false, error: "Superadmin must login with email and password." };
+    }
     if (existing.status !== "active") {
       return { ok: false, error: "Your account is inactive. Contact support." };
     }

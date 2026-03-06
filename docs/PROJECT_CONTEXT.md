@@ -32,10 +32,10 @@ FunnelCOD es una app frontend (Vite + React + TS) para crear funnels COD, public
 
 - `/`
 - `/auth`
-- `/dashboard` (protegida)
-- `/editor/:id` (protegida + ownership)
-- `/preview/:id` (protegida + ownership)
-- `/orders` (protegida)
+- `/dashboard` (protegida, no superadmin)
+- `/editor/:id` (protegida + ownership, no superadmin)
+- `/preview/:id` (protegida + ownership, no superadmin)
+- `/orders` (protegida, no superadmin)
 - `/superadmin` (solo superadmin)
 - `/f/:slug`
 - `*` (404)
@@ -59,16 +59,19 @@ Ver detalle mecanico en `docs/contract.md`.
 ## Flujos clave
 
 1. Registro/Login en `/auth` (email-password o Google).
-2. Dashboard: crear funnels asignados al usuario.
-3. Editor: editar funnel con control de ownership.
-4. Publicar funnel con limites por plan:
+2. Redireccion post-login por rol:
+   - `user` -> `/dashboard`
+   - `superadmin` -> `/superadmin`
+3. Dashboard: crear funnels asignados al usuario (solo rol `user`).
+4. Editor: editar funnel con control de ownership (solo rol `user`).
+5. Publicar funnel con limites por plan:
    - Free: no publica.
    - Pro: hasta 2 funnels publicados.
    - Master: ilimitado.
-5. Captura de orden COD en `/f/:slug` -> guarda pedido con owner.
-6. Gestion de pedidos en `/orders`.
-7. Superadmin en `/superadmin`: activar/desactivar usuarios y cambiar planes (no eliminable/desactivable).
-8. Landing: orden visual principal actualizado a Hero -> Testimonios -> Features -> How it works -> Pricing -> FAQ + CTA final.
+6. Captura de orden COD en `/f/:slug` -> guarda pedido con owner.
+7. Gestion de pedidos en `/orders` (solo rol `user`).
+8. Superadmin en `/superadmin`: activar/desactivar usuarios y cambiar planes (no eliminable/desactivable).
+9. Landing: orden visual principal actualizado a Hero -> Testimonios -> Features -> How it works -> Pricing -> FAQ + CTA final.
 
 ## Integraciones y env vars
 
