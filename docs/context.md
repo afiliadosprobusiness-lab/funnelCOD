@@ -111,6 +111,10 @@ Plans:
 3. Activates/deactivates users and changes plans.
 4. Superadmin record is protected against deletion/deactivation.
 
+### Landing marketing flow
+1. User sees hero first and immediately after that the testimonials carousel.
+2. Then the page continues with features, how-it-works, pricing, and FAQ sections.
+
 ## 7) External integrations and env vars
 
 - No backend/API calls.

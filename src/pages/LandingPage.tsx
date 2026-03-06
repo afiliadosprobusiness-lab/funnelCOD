@@ -599,6 +599,62 @@ export default function LandingPage() {
           </div>
         </section>
 
+        <section id="testimonials" className="px-4 py-24 sm:px-6">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center">
+              <p className="text-sm font-semibold uppercase tracking-wider text-cyan-300/90">{t.nav.testimonials}</p>
+              <h2 className="mt-2 text-3xl font-bold text-white md:text-4xl">
+                {language === "es" ? "Historias reales de tiendas que venden más" : "Real stories from stores selling more"}
+              </h2>
+              <p className="mt-3 text-sm text-slate-300">
+                {language === "es" ? "Desliza o usa las flechas para navegar" : "Swipe or use arrows to navigate"}
+              </p>
+            </div>
+
+            <div className="relative mt-8">
+              <div className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-16 bg-gradient-to-r from-slate-950 to-transparent md:block" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 z-10 hidden w-16 bg-gradient-to-l from-slate-950 to-transparent md:block" />
+              <div className="absolute right-2 top-[-3.25rem] hidden items-center gap-2 md:flex">
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="outline"
+                  className="h-9 w-9 border-slate-700 bg-slate-900 text-slate-100 hover:bg-slate-800"
+                  onClick={() => moveTestimonials("left")}
+                  aria-label={language === "es" ? "Mover testimonios a la izquierda" : "Move testimonials left"}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="outline"
+                  className="h-9 w-9 border-slate-700 bg-slate-900 text-slate-100 hover:bg-slate-800"
+                  onClick={() => moveTestimonials("right")}
+                  aria-label={language === "es" ? "Mover testimonios a la derecha" : "Move testimonials right"}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+
+              <div
+                ref={testimonialsRef}
+                className="overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory"
+                aria-label={language === "es" ? "Carrusel de testimonios" : "Testimonials carousel"}
+              >
+                <div className="flex w-max min-w-full gap-4 pr-4">
+                  {stories.map(([name, role, user, text, likes], index) => (
+                    <InstagramCard
+                      key={user}
+                      item={{ name, role, user, text, likes, image: AVATARS[index % AVATARS.length] }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section id="features" className="px-4 py-24 sm:px-6">
           <div className="mx-auto max-w-6xl">
             <div className="mb-14 text-center">
@@ -705,62 +761,6 @@ export default function LandingPage() {
                   <p className="mt-2 text-sm text-slate-300">{description}</p>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="testimonials" className="px-4 py-24 sm:px-6">
-          <div className="mx-auto max-w-6xl">
-            <div className="text-center">
-              <p className="text-sm font-semibold uppercase tracking-wider text-cyan-300/90">{t.nav.testimonials}</p>
-              <h2 className="mt-2 text-3xl font-bold text-white md:text-4xl">
-                {language === "es" ? "Historias reales de tiendas que venden más" : "Real stories from stores selling more"}
-              </h2>
-              <p className="mt-3 text-sm text-slate-300">
-                {language === "es" ? "Desliza o usa las flechas para navegar" : "Swipe or use arrows to navigate"}
-              </p>
-            </div>
-
-            <div className="relative mt-8">
-              <div className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-16 bg-gradient-to-r from-slate-950 to-transparent md:block" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 z-10 hidden w-16 bg-gradient-to-l from-slate-950 to-transparent md:block" />
-              <div className="absolute right-2 top-[-3.25rem] hidden items-center gap-2 md:flex">
-                <Button
-                  type="button"
-                  size="icon"
-                  variant="outline"
-                  className="h-9 w-9 border-slate-700 bg-slate-900 text-slate-100 hover:bg-slate-800"
-                  onClick={() => moveTestimonials("left")}
-                  aria-label={language === "es" ? "Mover testimonios a la izquierda" : "Move testimonials left"}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Button
-                  type="button"
-                  size="icon"
-                  variant="outline"
-                  className="h-9 w-9 border-slate-700 bg-slate-900 text-slate-100 hover:bg-slate-800"
-                  onClick={() => moveTestimonials("right")}
-                  aria-label={language === "es" ? "Mover testimonios a la derecha" : "Move testimonials right"}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-
-              <div
-                ref={testimonialsRef}
-                className="overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory"
-                aria-label={language === "es" ? "Carrusel de testimonios" : "Testimonials carousel"}
-              >
-                <div className="flex w-max min-w-full gap-4 pr-4">
-                  {stories.map(([name, role, user, text, likes], index) => (
-                    <InstagramCard
-                      key={user}
-                      item={{ name, role, user, text, likes, image: AVATARS[index % AVATARS.length] }}
-                    />
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         </section>
