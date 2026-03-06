@@ -4,14 +4,15 @@ Last updated: 2026-03-06
 
 ## 1) Product purpose
 
-FunnelCOD is a frontend-only COD (Cash on Delivery) funnel builder.
+FunnelCOD is a COD (Cash on Delivery) funnel builder frontend.
 Users can:
-- Create funnels.
-- Edit pages with a drag-and-drop visual editor.
-- Publish funnels to a public route.
+- Register/login (email+password) and login with Google.
+- Create and edit funnels.
+- Publish funnels according to selected plan limits.
 - Collect and manage COD orders.
+- Superadmin can manage user status and plans.
 
-There is no backend/API integration in the current version.
+The project remains frontend-only (no backend API).
 
 ## 2) Tech stack
 
@@ -23,105 +24,115 @@ There is no backend/API integration in the current version.
 - Drag and drop: dnd-kit
 - Validation: zod
 - IDs: uuid
-- Testing: Vitest + Testing Library (minimal test coverage currently)
-- Build plugins: `@vitejs/plugin-react-swc` only (no Lovable-specific tagger plugin)
+- Testing: Vitest + Testing Library
+- Build plugins: `@vitejs/plugin-react-swc`
 
 ## 3) Runtime architecture
 
 ### Entry points
 - `src/main.tsx` mounts `App`.
-- `src/App.tsx` wires providers and routes.
+- `src/App.tsx` wires providers, routes, and guarded pages.
 
 ### Main modules
 - `src/pages/*`: route-level pages.
 - `src/components/editor/*`: editor, renderer, and COD form components.
-- `src/store/funnel-store.ts`: localStorage persistence and domain actions.
-- `src/types/funnel.ts`: shared domain types.
+- `src/components/auth/*`: route guards and Google sign-in UI.
+- `src/store/funnel-store.ts`: funnels/orders persistence and plan-based publish rules.
+- `src/store/auth-store.ts`: users/session auth logic and superadmin management actions.
+- `src/types/*`: shared domain types.
 - `src/components/ui/*`: shadcn-ui component set.
 
 ### State and persistence
-- Primary persistence uses browser `localStorage`.
+- Browser `localStorage` is the source of persistence.
 - Keys:
   - `cod_funnels`
   - `cod_orders`
+  - `cod_users`
+  - `cod_session`
   - `funnelcod_lang` (optional landing language preference)
-- Main state in pages is React local state hydrated from `localStorage`.
 
 ## 4) Routes and navigation
 
-- `/`: marketing landing page.
-- `/dashboard`: list/create/manage funnels.
-- `/editor/:id`: visual editor for a funnel.
-- `/preview/:id`: preview mode with desktop/mobile viewport switch.
-- `/orders`: orders table with status updates and filtering.
-- `/f/:slug`: public published funnel page.
+- `/`: marketing landing.
+- `/auth`: login/register (email-password + Google).
+- `/dashboard`: user funnels dashboard (protected).
+- `/editor/:id`: visual editor (protected + ownership check).
+- `/preview/:id`: preview mode (protected + ownership check).
+- `/orders`: orders table (protected, scoped by user unless superadmin).
+- `/superadmin`: user admin console (protected, superadmin only).
+- `/f/:slug`: public published funnel.
 - `*`: 404 page.
 
 ## 5) Domain model (summary)
 
 Core entities:
-- `Funnel`: metadata, slug, pages, product info, publish flag, timestamps.
-- `FunnelPage`: page type (`product`, `order`, `thankyou`, `custom`) and sections.
-- `Section -> Row -> Container -> FunnelElement`: nested layout model.
-- `Order`: COD order captured from order form and tracked by status.
+- `Funnel`: metadata, optional `ownerId`, pages, product info, publish flag, timestamps.
+- `Order`: optional `ownerId`, customer details, total, status.
+- `AppUser`: provider, role, plan, status, timestamps.
+- `AuthSession`: `userId` reference.
+
+Plans:
+- `free`: can create funnels but cannot publish.
+- `pro`: can publish up to 2 funnels.
+- `master`: unlimited publishing.
 
 ## 6) Main user flows
 
+### Authentication
+1. User goes to `/auth`.
+2. User signs in with email/password or Google, or registers.
+3. Session is saved to `cod_session`.
+4. Protected routes become available.
+
 ### Funnel management
 1. User creates funnel in dashboard.
-2. App creates default pages (`product`, `order`, `thankyou`).
+2. App creates default pages (`product`, `order`, `thankyou`) and assigns ownership.
 3. Funnel is persisted to `cod_funnels`.
 
 ### Visual editing
 1. User opens `/editor/:id`.
-2. Editor loads funnel from localStorage.
-3. User adds/reorders/updates elements (dnd-kit + settings panel).
-4. Changes are saved to localStorage with undo/redo history in-memory.
+2. Editor validates ownership (unless superadmin).
+3. User edits sections/elements and saves to localStorage.
 
 ### Publish and view
 1. User clicks Publish in editor or dashboard.
-2. `published` flag toggles true.
-3. Public page available at `/f/:slug` if published.
+2. App validates plan publishing limits.
+3. If allowed, `published` is set true and funnel is reachable at `/f/:slug`.
 
 ### COD order capture
-1. User submits COD form (`cod-order-form` element) in published funnel.
+1. Visitor submits COD form in a published funnel.
 2. zod validates fields.
-3. Order is saved in `cod_orders` with status `new`.
-4. Backoffice user manages statuses in `/orders`.
+3. Order is saved to `cod_orders` with status `new` and owner mapping.
+4. Owner (or superadmin) manages statuses in `/orders`.
 
-### Landing marketing flow
-1. User enters `/` and sees dark-mode landing with strong CTA.
-2. Navbar links (`features`, `how-it-works`, `testimonials`, `pricing`, `faq`) scroll smoothly to sections.
-3. Language selector toggles `es/en` copy across all landing sections and persists preference in `localStorage` under `funnelcod_lang`.
-4. Testimonials are displayed as social-style cards in a horizontal scroller with left/right controls (no visual duplication), including role under each name.
-5. Pricing section is structured as 4 cards (`Basic`, `Pro`, `Advanced`, `Enterprise`) aligned to current scope and Peru/Latam positioning.
-6. FAQ section uses accordion interaction with expanded question set.
+### Superadmin operations
+1. Superadmin logs in to `/auth`.
+2. Opens `/superadmin`.
+3. Activates/deactivates users and changes plans.
+4. Superadmin record is protected against deletion/deactivation.
 
 ## 7) External integrations and env vars
 
-- No external API calls.
-- Landing uses a local hero image, external referential feature/testimonial images, and local fallback assets.
-- No required environment variables.
-- React Query provider exists but no active `useQuery` / `useMutation` usage yet.
+- No backend/API calls.
+- Optional Google Identity Services integration for sign-in button.
+- Optional env var:
+  - `VITE_GOOGLE_CLIENT_ID`
+- Landing uses a local hero image and external referential images with fallbacks.
 
 ## 8) Quality and testing status
 
 - Test setup exists (`vitest.config.ts`, `src/test/setup.ts`).
-- Current test coverage is effectively placeholder (`src/test/example.test.ts`).
-- Build was executed successfully (`npm run build`) after landing updates.
-- Tests were executed successfully (`npm run test`).
+- Coverage remains small but includes auth/plan critical rules.
 
 ## 9) Known constraints and technical notes
 
-- Data is local per browser/device due localStorage persistence.
-- No authentication/authorization model.
-- Public funnel and order data are not server-backed.
-- Many shadcn components are scaffolded but not all are used in active flows.
-- Some UI strings show character encoding artifacts from source text.
-- Marketing landing has dynamic SEO tags updated at runtime based on selected language.
+- Data is local per browser/device.
+- No server-side validation or secure credential storage (client-only prototype model).
+- Session and permissions are local app-level guards.
 
 ## 10) Security and privacy baseline
 
-- No secrets or API keys in current code path.
-- Customer order data (PII) is stored in plain localStorage, so it is client-visible.
-- This is suitable for prototype/local usage, not for production data compliance.
+- No secrets committed in source.
+- `.env.example` documents Google client id var.
+- Customer order data and users are stored in localStorage (client-visible).
+- Suitable for prototype/local usage, not compliance-grade production storage.

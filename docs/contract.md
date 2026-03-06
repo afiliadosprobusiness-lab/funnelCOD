@@ -1,15 +1,16 @@
 # FunnelCOD - Contract
 
 Last updated: 2026-03-06
-Version: 1.1.0
+Version: 1.2.0
 
 ## 1) Scope
 
-This contract defines stable integration points for the current frontend-only app:
+This contract defines stable integration points for the current frontend app:
 - Route contract.
 - Local persistence contract (`localStorage`).
-- Data shape contract for funnels, elements, and orders.
+- Data shape contract for funnels, users, session, and orders.
 - Validation contract for COD order capture.
+- Plan publishing limits.
 
 No HTTP API contract exists yet in this version.
 
@@ -17,10 +18,12 @@ No HTTP API contract exists yet in this version.
 
 ### Public and app routes
 - `GET /`
-- `GET /dashboard`
-- `GET /editor/:id`
-- `GET /preview/:id`
-- `GET /orders`
+- `GET /auth`
+- `GET /dashboard` (auth required)
+- `GET /editor/:id` (auth required)
+- `GET /preview/:id` (auth required)
+- `GET /orders` (auth required)
+- `GET /superadmin` (auth + superadmin role required)
 - `GET /f/:slug`
 - Fallback `*` -> 404 UI
 
@@ -29,7 +32,9 @@ No HTTP API contract exists yet in this version.
 - `slug`: URL-safe string used to resolve published funnel.
 
 ### Route behavior guarantees
-- `/editor/:id` redirects to `/dashboard` if funnel is not found.
+- Protected routes redirect to `/auth` when no active session exists.
+- `/superadmin` redirects to `/dashboard` for non-superadmin users.
+- `/editor/:id` and `/preview/:id` redirect to `/dashboard` if funnel is not found or user has no access.
 - `/f/:slug` renders "not found" UI when slug does not exist or funnel is unpublished.
 
 ## 3) Persistence contract (localStorage)
@@ -37,6 +42,8 @@ No HTTP API contract exists yet in this version.
 ### Keys
 - `cod_funnels`
 - `cod_orders`
+- `cod_users`
+- `cod_session`
 - `funnelcod_lang` (optional UI preference key for landing language)
 
 ### Key: `cod_funnels`
@@ -46,6 +53,7 @@ JSON array of `Funnel`.
 ```ts
 type Funnel = {
   id: string;
+  ownerId?: string;
   name: string;
   slug: string;
   pages: FunnelPage[];
@@ -111,6 +119,7 @@ JSON array of `Order`.
 ```ts
 type Order = {
   id: string;
+  ownerId?: string;
   funnelId: string;
   funnelName: string;
   customerName: string;
@@ -125,7 +134,43 @@ type Order = {
 };
 ```
 
-## 4) COD form validation contract
+### Key: `cod_users`
+JSON array of `AppUser`.
+
+```ts
+type AppUser = {
+  id: string;
+  name: string;
+  email: string;
+  passwordHash?: string;
+  provider: "password" | "google";
+  role: "user" | "superadmin";
+  plan: "free" | "pro" | "master";
+  status: "active" | "inactive";
+  createdAt: string; // ISO datetime
+  updatedAt: string; // ISO datetime
+};
+```
+
+Rules:
+- A seed superadmin is always ensured.
+- Superadmin cannot be deleted or deactivated by store actions.
+
+### Key: `cod_session`
+```ts
+type AuthSession = {
+  userId: string;
+};
+```
+
+## 4) Plan publishing contract
+
+- `free`: can create funnels but cannot publish.
+- `pro`: can publish up to 2 funnels.
+- `master`: unlimited published funnels.
+- `superadmin`: bypasses plan publishing limits.
+
+## 5) COD form validation contract
 
 Input rules (zod):
 - `fullName`: string, trimmed, min 2, max 100.
@@ -142,12 +187,12 @@ On invalid submit:
 - No write to storage.
 - Field-level error messages are shown in UI.
 
-## 5) Compatibility rules
+## 6) Compatibility rules
 
 Breaking changes (require version bump + migration strategy):
 - Renaming/removing storage keys.
-- Renaming/removing required fields in `Funnel` or `Order`.
-- Changing allowed enum values for `ElementType` or order `status`.
+- Renaming/removing required fields in `Funnel`, `Order`, `AppUser`, or `AuthSession`.
+- Changing allowed enum values for `ElementType`, order `status`, plan ids, role, or provider.
 - Changing route patterns (`/editor/:id`, `/f/:slug`, etc.).
 
 Non-breaking changes:
@@ -155,7 +200,15 @@ Non-breaking changes:
 - Adding new element types while preserving existing rendering behavior.
 - Adding new pages/routes without modifying current route signatures.
 
-## 6) Changelog del Contrato
+## 7) Changelog del Contrato
+
+- 2026-03-06: Added auth/session and user-management contract (`cod_users`, `cod_session`), plus superadmin protection.
+  - Type: non-breaking
+  - Impact: enables login/register/google auth and superadmin controls without breaking existing funnel/order data.
+
+- 2026-03-06: Added plan publishing contract (`free`, `pro`, `master`) and optional ownership fields (`ownerId`) for funnels/orders.
+  - Type: non-breaking
+  - Impact: enforces publishing limits and multi-user data separation in localStorage.
 
 - 2026-03-06: Added optional language preference key `funnelcod_lang` in localStorage.
   - Type: non-breaking

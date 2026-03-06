@@ -5,11 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from '@/hooks/use-toast';
 import { Funnel, FunnelElement, ElementType } from '@/types/funnel';
-import { getFunnel, updateFunnel, createElement } from '@/store/funnel-store';
+import { createElement, getFunnel, setFunnelPublishState, updateFunnel } from '@/store/funnel-store';
 import EditorSidebar from '@/components/editor/EditorSidebar';
 import EditorSettings from '@/components/editor/EditorSettings';
 import ElementRenderer from '@/components/editor/ElementRenderer';
 import { v4 as uuid } from 'uuid';
+import { useAuthUser } from '@/hooks/use-auth';
+import { isSuperadmin } from '@/store/auth-store';
 import {
   DndContext,
   DragOverlay,
@@ -109,6 +111,7 @@ function CanvasDropZone({ children, id }: { children: React.ReactNode; id: strin
 const Editor = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const user = useAuthUser();
   const [funnel, setFunnel] = useState<Funnel | null>(null);
   const [activePageId, setActivePageId] = useState<string>('');
   const [selectedElementId, setSelectedElementId] = useState<string | null>(null);
@@ -122,9 +125,9 @@ const Editor = () => {
   );
 
   useEffect(() => {
-    if (!id) return;
+    if (!id || !user) return;
     const f = getFunnel(id);
-    if (f) {
+    if (f && (isSuperadmin(user) || f.ownerId === user.id)) {
       setFunnel(f);
       if (f.pages.length > 0) setActivePageId(f.pages[0].id);
       // Init history
@@ -133,7 +136,7 @@ const Editor = () => {
     } else {
       navigate('/dashboard');
     }
-  }, [id, navigate]);
+  }, [id, navigate, user]);
 
   const activePage = funnel?.pages.find(p => p.id === activePageId);
 
@@ -288,9 +291,22 @@ const Editor = () => {
   };
 
   const handlePublish = () => {
-    if (!funnel) return;
-    saveFunnel({ ...funnel, published: true });
-    toast({ title: 'Funnel published! 🚀', description: `Available at /f/${funnel.slug}` });
+    if (!funnel || !user) return;
+    const result = setFunnelPublishState({
+      funnelId: funnel.id,
+      nextPublished: true,
+      ownerId: user.id,
+      userPlan: user.plan,
+      isSuperadmin: isSuperadmin(user),
+    });
+
+    if (!result.ok || !result.funnel) {
+      toast({ title: 'Cannot publish funnel', description: result.error, variant: 'destructive' });
+      return;
+    }
+
+    setFunnel(result.funnel);
+    toast({ title: 'Funnel published!', description: `Available at /f/${result.funnel.slug}` });
   };
 
   if (!funnel || !activePage) return null;
@@ -426,3 +442,4 @@ const Editor = () => {
 };
 
 export default Editor;
+

@@ -48,6 +48,7 @@ export interface FunnelPage {
 
 export interface Funnel {
   id: string;
+  ownerId?: string;
   name: string;
   slug: string;
   pages: FunnelPage[];
@@ -66,6 +67,7 @@ export type OrderStatus = 'new' | 'confirmed' | 'shipped' | 'delivered' | 'cance
 
 export interface Order {
   id: string;
+  ownerId?: string;
   funnelId: string;
   funnelName: string;
   customerName: string;

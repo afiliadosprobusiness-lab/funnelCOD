@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { Funnel } from '@/types/funnel';
 import { saveOrder } from '@/store/funnel-store';
 import { toast } from '@/hooks/use-toast';
@@ -44,6 +45,7 @@ export const CODOrderForm = ({ funnel, isEditor }: CODOrderFormProps) => {
 
     setErrors({});
     saveOrder({
+      ownerId: funnel?.ownerId,
       funnelId: funnel?.id || '',
       funnelName: funnel?.name || '',
       customerName: form.fullName,
@@ -75,7 +77,9 @@ export const CODOrderForm = ({ funnel, isEditor }: CODOrderFormProps) => {
       <h3 className="text-lg font-bold text-foreground text-center mb-4">Complete Your Order</h3>
       
       <div>
+        <Label htmlFor="cod-fullName" className="mb-1.5 block text-xs text-muted-foreground">Full Name</Label>
         <Input
+          id="cod-fullName"
           placeholder="Full Name"
           value={form.fullName}
           onChange={e => setForm({ ...form, fullName: e.target.value })}
@@ -85,7 +89,9 @@ export const CODOrderForm = ({ funnel, isEditor }: CODOrderFormProps) => {
       </div>
 
       <div>
+        <Label htmlFor="cod-phone" className="mb-1.5 block text-xs text-muted-foreground">Phone Number</Label>
         <Input
+          id="cod-phone"
           placeholder="Phone Number"
           value={form.phone}
           onChange={e => setForm({ ...form, phone: e.target.value })}
@@ -95,7 +101,9 @@ export const CODOrderForm = ({ funnel, isEditor }: CODOrderFormProps) => {
       </div>
 
       <div>
+        <Label htmlFor="cod-city" className="mb-1.5 block text-xs text-muted-foreground">City</Label>
         <Input
+          id="cod-city"
           placeholder="City"
           value={form.city}
           onChange={e => setForm({ ...form, city: e.target.value })}
@@ -105,7 +113,9 @@ export const CODOrderForm = ({ funnel, isEditor }: CODOrderFormProps) => {
       </div>
 
       <div>
+        <Label htmlFor="cod-address" className="mb-1.5 block text-xs text-muted-foreground">Full Address</Label>
         <Input
+          id="cod-address"
           placeholder="Full Address"
           value={form.address}
           onChange={e => setForm({ ...form, address: e.target.value })}

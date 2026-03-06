@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
+import { useAuthUser } from "@/hooks/use-auth";
 import heroImage from "@/assets/hero-editor.jpg";
 
 type Language = "es" | "en";
@@ -192,16 +193,58 @@ const STORIES = {
 } as const;
 const PRICING = {
   es: [
-    ["Basico", "S/ 0", "/mes", "Para validar tu primera oferta", "Empezar gratis", ["1 funnel activo", "Editor drag and drop", "Formulario COD", "Tablero de pedidos local"]],
-    ["Pro", "S/ 99", "/mes", "Para campañas activas en Peru y Latam", "Probar 7 dias", ["Funnels ilimitados", "Duplicar funnels y paginas", "Estados de pedido completos", "Personalizacion total de bloques"], "Mas popular"],
-    ["Avanzado", "S/ 199", "/mes", "Para equipos con mayor volumen", "Empezar ahora", ["Todo lo de Pro", "Onboarding guiado", "Acompañamiento mensual", "Soporte prioritario Latam"]],
-    ["Enterprise", "Contactar", "", "Necesitas implementacion a medida", "Hablar con ventas", ["Plan comercial personalizado", "Capacitacion para equipos", "SLA de soporte", "Acompañamiento dedicado"]],
+    [
+      "Gratis",
+      "US$ 0",
+      "/mes",
+      "Solo puedes crear el funnel, pero no publicarlo.",
+      "Empezar gratis",
+      ["Creacion de funnels", "Editor drag and drop", "Formulario COD", "No permite publicar funnels"],
+    ],
+    [
+      "Pro",
+      "US$ 9.9",
+      "/mes",
+      "Puede publicar hasta 2 funnels.",
+      "Elegir Pro",
+      ["Todo lo de Gratis", "Publicacion de hasta 2 funnels", "Gestion de pedidos", "Soporte por email"],
+      "Mas popular",
+    ],
+    [
+      "Master",
+      "US$ 50",
+      "/mes",
+      "Funnels ilimitados.",
+      "Elegir Master",
+      ["Todo lo de Pro", "Publicacion ilimitada", "Prioridad de soporte", "Escalado para equipos"],
+    ],
   ],
   en: [
-    ["Basic", "US$ 0", "/mo", "To validate your first offer", "Start free", ["1 active funnel", "Drag and drop builder", "COD form", "Local order board"]],
-    ["Pro", "US$ 29", "/mo", "For active campaigns in Peru and Latam", "Try 7 days", ["Unlimited funnels", "Duplicate funnels and pages", "Full order statuses", "Full block customization"], "Most popular"],
-    ["Advanced", "US$ 59", "/mo", "For teams handling higher volume", "Get started", ["Everything in Pro", "Guided onboarding", "Monthly optimization session", "Priority Latam support"]],
-    ["Enterprise", "Contact us", "", "Need custom implementation", "Talk to sales", ["Tailored commercial plan", "Team training", "Support SLA", "Dedicated follow-up"]],
+    [
+      "Free",
+      "US$ 0",
+      "/mo",
+      "Create funnels only, publishing is disabled.",
+      "Start free",
+      ["Funnel creation", "Drag and drop editor", "COD form", "No funnel publishing"],
+    ],
+    [
+      "Pro",
+      "US$ 9.9",
+      "/mo",
+      "Can publish up to 2 funnels.",
+      "Choose Pro",
+      ["Everything in Free", "Up to 2 published funnels", "Order tracking", "Email support"],
+      "Most popular",
+    ],
+    [
+      "Master",
+      "US$ 50",
+      "/mo",
+      "Unlimited published funnels.",
+      "Choose Master",
+      ["Everything in Pro", "Unlimited publishing", "Priority support", "Built for growing teams"],
+    ],
   ],
 } as const;
 const FAQ = {
@@ -319,6 +362,7 @@ function InstagramCard({
 }
 export default function LandingPage() {
   const navigate = useNavigate();
+  const user = useAuthUser();
   const testimonialsRef = useRef<HTMLDivElement | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [language, setLanguage] = useState<Language>(() => {
@@ -328,6 +372,7 @@ export default function LandingPage() {
   });
 
   const t = TEXT[language];
+  const dashboardTarget = user ? "/dashboard" : "/auth";
   const features = FEATURES[language];
   const steps = HOW_STEPS[language];
   const stories = STORIES[language];
@@ -427,11 +472,11 @@ export default function LandingPage() {
               variant="ghost"
               size="sm"
               className="text-slate-200 hover:bg-slate-800 hover:text-white"
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate(dashboardTarget)}
             >
               {t.nav.signIn}
             </Button>
-            <Button size="sm" className="btn-gradient" onClick={() => navigate("/dashboard")}>
+            <Button size="sm" className="btn-gradient" onClick={() => navigate(dashboardTarget)}>
               {t.nav.start} <ArrowRight className="ml-1 h-3.5 w-3.5" />
             </Button>
           </div>
@@ -471,7 +516,7 @@ export default function LandingPage() {
                 <option value="es">Español</option>
                 <option value="en">English</option>
               </select>
-              <Button size="sm" className="btn-gradient" onClick={() => navigate("/dashboard")}>
+              <Button size="sm" className="btn-gradient" onClick={() => navigate(dashboardTarget)}>
                 {t.nav.start}
               </Button>
             </div>
@@ -509,7 +554,7 @@ export default function LandingPage() {
                 <Button
                   size="lg"
                   className="btn-gradient rounded-xl px-7 py-6 text-base font-semibold"
-                  onClick={() => navigate("/dashboard")}
+                  onClick={() => navigate(dashboardTarget)}
                 >
                   {t.hero.cta} <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -517,7 +562,7 @@ export default function LandingPage() {
                   size="lg"
                   variant="outline"
                   className="rounded-xl border-slate-700 bg-slate-900/70 px-7 py-6 text-base text-slate-100 hover:bg-slate-800"
-                  onClick={() => navigate("/dashboard")}
+                  onClick={() => navigate(dashboardTarget)}
                 >
                   {t.hero.cta2}
                 </Button>
@@ -734,7 +779,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="mt-10 grid gap-4 lg:grid-cols-4">
+            <div className="mt-10 grid gap-4 lg:grid-cols-3">
               {pricing.map(([name, price, period, detail, cta, points, badge], index) => (
                 <article
                   key={name}
@@ -760,7 +805,7 @@ export default function LandingPage() {
                       "mt-4 w-full rounded-xl text-sm",
                       index === 1 ? "btn-gradient" : "border border-cyan-400/50 bg-transparent hover:bg-cyan-500/10",
                     )}
-                    onClick={() => navigate("/dashboard")}
+                    onClick={() => navigate(dashboardTarget)}
                   >
                     {cta} <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>

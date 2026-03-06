@@ -6,22 +6,27 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Funnel } from '@/types/funnel';
 import { getFunnel } from '@/store/funnel-store';
 import ElementRenderer from '@/components/editor/ElementRenderer';
+import { useAuthUser } from '@/hooks/use-auth';
+import { isSuperadmin } from '@/store/auth-store';
 
 const Preview = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const user = useAuthUser();
   const [funnel, setFunnel] = useState<Funnel | null>(null);
   const [activePageId, setActivePageId] = useState('');
   const [mode, setMode] = useState<'desktop' | 'mobile'>('desktop');
 
   useEffect(() => {
-    if (!id) return;
+    if (!id || !user) return;
     const f = getFunnel(id);
-    if (f) {
+    if (f && (isSuperadmin(user) || f.ownerId === user.id)) {
       setFunnel(f);
       if (f.pages.length > 0) setActivePageId(f.pages[0].id);
+    } else {
+      navigate('/dashboard');
     }
-  }, [id]);
+  }, [id, navigate, user]);
 
   const activePage = funnel?.pages.find(p => p.id === activePageId);
 

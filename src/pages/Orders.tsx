@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,9 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { Order, OrderStatus } from '@/types/funnel';
-import { getOrders, updateOrderStatus } from '@/store/funnel-store';
+import { getOrdersByOwner, updateOrderStatus } from '@/store/funnel-store';
+import { useAuthUser } from '@/hooks/use-auth';
+import { isSuperadmin } from '@/store/auth-store';
 
 const statusOptions: OrderStatus[] = ['new', 'confirmed', 'shipped', 'delivered', 'cancelled'];
 
@@ -17,28 +19,38 @@ const Orders = () => {
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const navigate = useNavigate();
+  const user = useAuthUser();
 
-  useEffect(() => { setOrders(getOrders()); }, []);
+  const refreshOrders = useCallback(() => {
+    if (!user) return;
+    setOrders(getOrdersByOwner(user.id, isSuperadmin(user)));
+  }, [user]);
+
+  useEffect(() => {
+    refreshOrders();
+  }, [refreshOrders]);
 
   const handleStatusChange = (orderId: string, status: OrderStatus) => {
     updateOrderStatus(orderId, status);
-    setOrders(getOrders());
+    refreshOrders();
   };
 
   const filtered = orders
-    .filter(o => filterStatus === 'all' || o.status === filterStatus)
-    .filter(o =>
-      o.customerName.toLowerCase().includes(search.toLowerCase()) ||
-      o.phone.includes(search) ||
-      o.productName.toLowerCase().includes(search.toLowerCase())
+    .filter((order) => filterStatus === 'all' || order.status === filterStatus)
+    .filter((order) =>
+      order.customerName.toLowerCase().includes(search.toLowerCase()) ||
+      order.phone.includes(search) ||
+      order.productName.toLowerCase().includes(search.toLowerCase()),
     )
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card">
         <div className="container flex items-center h-16 px-6 gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
+          <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
           <h1 className="text-lg font-bold text-foreground">Orders</h1>
@@ -53,7 +65,7 @@ const Orders = () => {
             <Input
               placeholder="Search orders..."
               value={search}
-              onChange={e => setSearch(e.target.value)}
+              onChange={(event) => setSearch(event.target.value)}
               className="pl-9"
             />
           </div>
@@ -63,8 +75,8 @@ const Orders = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Status</SelectItem>
-              {statusOptions.map(s => (
-                <SelectItem key={s} value={s} className="capitalize">{s}</SelectItem>
+              {statusOptions.map((status) => (
+                <SelectItem key={status} value={status} className="capitalize">{status}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -92,7 +104,7 @@ const Orders = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filtered.map(order => (
+                  {filtered.map((order) => (
                     <tr key={order.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
                       <td className="p-3 font-mono text-xs">{order.id.slice(0, 8)}</td>
                       <td className="p-3 font-medium">{order.customerName}</td>
@@ -103,14 +115,14 @@ const Orders = () => {
                       <td className="p-3">
                         <Select
                           value={order.status}
-                          onValueChange={(v) => handleStatusChange(order.id, v as OrderStatus)}
+                          onValueChange={(value) => handleStatusChange(order.id, value as OrderStatus)}
                         >
                           <SelectTrigger className="h-7 w-28 text-xs">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {statusOptions.map(s => (
-                              <SelectItem key={s} value={s} className="capitalize text-xs">{s}</SelectItem>
+                            {statusOptions.map((status) => (
+                              <SelectItem key={status} value={status} className="capitalize text-xs">{status}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
