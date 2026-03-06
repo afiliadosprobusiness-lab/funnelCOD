@@ -25,9 +25,9 @@ const IMAGE_FALLBACK = "/placeholder.svg";
 const AVATAR_FALLBACK = "/avatar-placeholder.svg";
 
 const FEATURE_IMAGES = [
-  "/feature-editor.svg",
-  "/feature-cod.svg",
-  "/feature-orders.svg",
+  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1600&q=80",
+  "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1600&q=80",
+  "https://images.unsplash.com/photo-1551281044-8b1a8f0f59bd?auto=format&fit=crop&w=1600&q=80",
 ];
 
 const AVATARS = [
@@ -174,20 +174,20 @@ const HOW_STEPS = {
 
 const STORIES = {
   es: [
-    ["Maria Rojas", "@maria_codshop", "Subi mi pagina y al dia siguiente ya tenia pedidos.", "1.2 mil"],
-    ["Daniel Perez", "@dan_pedidos", "Ahora se que oferta convierte mejor y donde mejorar.", "986"],
-    ["Valentina Cruz", "@valen.store", "La gente entiende rapido la oferta y compra mas.", "1.8 mil"],
-    ["Javier Soto", "@javi_cod", "Pase de mensajes sueltos a pedidos bien organizados.", "764"],
-    ["Andrea Lopez", "@andrea_ventas", "La confianza mejoro desde la primera seccion.", "1.4 mil"],
-    ["Luis Campos", "@luiscod.pe", "Con estados claros tengo mejor control diario.", "552"],
+    ["María Rojas", "Fundadora - Tienda de belleza", "@maria_codshop", "Pasé de mensajes por WhatsApp a un flujo ordenado. El formulario COD me trae datos completos y cierro más rápido.", "1.2 mil"],
+    ["Daniel Pérez", "Media Buyer", "@dan_pedidos", "Con el editor drag and drop publico variaciones en minutos. Ya no dependo de terceros para lanzar campañas.", "986"],
+    ["Valentina Cruz", "Ecommerce Manager", "@valen.store", "La vista móvil me ayudó mucho. Mis clientes entienden mejor la oferta y se redujeron los pedidos incompletos.", "1.8 mil"],
+    ["Javier Soto", "Operaciones COD", "@javi_cod", "Ahora muevo estados de pedido desde un solo tablero y puedo priorizar llamadas de confirmación sin perder tiempo.", "764"],
+    ["Andrea López", "Vendedora - Moda", "@andrea_ventas", "Duplicar funnels para nuevas promos me ahorra horas por semana. El flujo de compra se ve mucho más profesional.", "1.4 mil"],
+    ["Luis Campos", "Growth Partner", "@luiscod.pe", "Probamos tres versiones del mismo producto y encontramos la ganadora en dos días. El cambio se reflejó en conversión.", "552"],
   ],
   en: [
-    ["Maria Rojas", "@maria_codshop", "I launched my page and got orders the next day.", "1.2K"],
-    ["Daniel Perez", "@dan_orders", "Now I know which offer converts best.", "986"],
-    ["Valentina Cruz", "@valen.store", "People understand the offer fast and buy more.", "1.8K"],
-    ["Javier Soto", "@javi_cod", "I moved from random chats to structured orders.", "764"],
-    ["Andrea Lopez", "@andrea_sales", "Trust improved from the first section of the page.", "1.4K"],
-    ["Luis Campos", "@luiscod.pe", "Order status control reduced daily mistakes.", "552"],
+    ["Maria Rojas", "Founder - Beauty Store", "@maria_codshop", "I moved from random chat orders to a structured COD flow. Now I receive complete customer details every day.", "1.2K"],
+    ["Daniel Perez", "Media Buyer", "@dan_orders", "The drag-and-drop editor lets me launch new variants in minutes without waiting on developers.", "986"],
+    ["Valentina Cruz", "Ecommerce Manager", "@valen.store", "Mobile preview made a big difference. Customers understand the offer faster and finish the form.", "1.8K"],
+    ["Javier Soto", "COD Operations", "@javi_cod", "With clear order statuses I prioritize confirmations better and my daily operation is much cleaner.", "764"],
+    ["Andrea Lopez", "Fashion Seller", "@andrea_sales", "Duplicating funnels for each campaign saved us hours. The checkout flow now looks much more premium.", "1.4K"],
+    ["Luis Campos", "Growth Partner", "@luiscod.pe", "We tested three funnel versions and found the winning one in two days. Conversion improved immediately.", "552"],
   ],
 } as const;
 const PRICING = {
@@ -206,14 +206,14 @@ const PRICING = {
 } as const;
 const FAQ = {
   es: [
-    ["¿Necesito saber diseño o programacion?", "No. El editor es visual y directo."],
-    ["¿Funciona bien en celular?", "Si. Incluye vista movil y diseño responsive real."],
-    ["¿Donde veo los pedidos?", "En la seccion de ordenes con filtros por estado."],
-    ["¿Puedo comenzar gratis?", "Si, puedes lanzar tu primer funnel sin pagar."],
-    ["¿Hay comision por venta?", "No. El alcance actual no aplica comisiones por pedido."],
-    ["¿Puedo duplicar funnels?", "Si. Desde dashboard puedes duplicar funnels y editar rapido."],
-    ["¿El flujo es solo COD?", "Si. Esta version esta enfocada en captura y gestion de pedidos COD."],
-    ["¿Sirve para Peru y Latam?", "Si. La propuesta comercial y precios estan pensados para ese mercado."],
+    ["¿Necesito saber diseño o programación?", "No. El editor es visual y directo."],
+    ["¿Funciona bien en celular?", "Sí. Incluye vista móvil y diseño responsive real."],
+    ["¿Dónde veo los pedidos?", "En la sección de órdenes con filtros por estado."],
+    ["¿Puedo comenzar gratis?", "Sí, puedes lanzar tu primer funnel sin pagar."],
+    ["¿Hay comisión por venta?", "No. El alcance actual no aplica comisiones por pedido."],
+    ["¿Puedo duplicar funnels?", "Sí. Desde dashboard puedes duplicar funnels y editar rápido."],
+    ["¿El flujo es solo COD?", "Sí. Esta versión está enfocada en captura y gestión de pedidos COD."],
+    ["¿Sirve para Perú y Latam?", "Sí. La propuesta comercial y precios están pensados para ese mercado."],
   ],
   en: [
     ["Do I need coding skills?", "No. The editor is fully visual and straightforward."],
@@ -277,7 +277,7 @@ function SmartImage({
 function InstagramCard({
   item,
 }: {
-  item: { name: string; user: string; text: string; likes: string; image: string };
+  item: { name: string; role: string; user: string; text: string; likes: string; image: string };
 }) {
   return (
     <article className="w-[285px] shrink-0 snap-start rounded-2xl bg-gradient-to-br from-fuchsia-500/60 via-amber-300/50 to-cyan-400/60 p-[1px]">
@@ -298,6 +298,7 @@ function InstagramCard({
             />
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-slate-100">{item.name}</p>
+              <p className="truncate text-[11px] text-cyan-300">{item.role}</p>
               <p className="truncate text-xs text-slate-400">{item.user}</p>
             </div>
           </div>
@@ -484,8 +485,14 @@ export default function LandingPage() {
             <div className="absolute -top-24 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-cyan-500/20 blur-3xl" />
             <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-blue-600/20 blur-3xl" />
           </div>
-          <div className="relative mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.05fr_1fr] lg:items-center">
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+
+          <div className="relative mx-auto max-w-6xl">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="mx-auto max-w-4xl text-center"
+            >
               <span className="inline-flex rounded-full border border-cyan-300/25 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-200">
                 {t.hero.badge}
               </span>
@@ -495,9 +502,15 @@ export default function LandingPage() {
                   {t.hero.highlight}
                 </span>
               </h1>
-              <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 md:text-lg">{t.hero.description}</p>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Button size="lg" className="btn-gradient rounded-xl px-7 py-6 text-base font-semibold" onClick={() => navigate("/dashboard")}>
+              <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-300 md:text-lg">
+                {t.hero.description}
+              </p>
+              <div className="mt-7 flex flex-wrap justify-center gap-3">
+                <Button
+                  size="lg"
+                  className="btn-gradient rounded-xl px-7 py-6 text-base font-semibold"
+                  onClick={() => navigate("/dashboard")}
+                >
                   {t.hero.cta} <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
                 <Button
@@ -509,7 +522,7 @@ export default function LandingPage() {
                   {t.hero.cta2}
                 </Button>
               </div>
-              <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-300">
+              <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-slate-300">
                 {t.hero.points.map((point) => (
                   <span key={point} className="inline-flex items-center gap-1.5">
                     <Check className="h-4 w-4 text-cyan-300" />
@@ -517,20 +530,27 @@ export default function LandingPage() {
                   </span>
                 ))}
               </div>
-              <div className="mt-7 grid gap-3 sm:grid-cols-3">
-                {t.hero.stats.map(([value, label]) => (
-                  <div key={label} className="rounded-xl border border-slate-800 bg-slate-900/70 p-3">
-                    <p className="text-xl font-bold text-cyan-300">{value}</p>
-                    <p className="mt-1 text-xs text-slate-400">{label}</p>
-                  </div>
-                ))}
-              </div>
             </motion.div>
-            <motion.div initial={{ opacity: 0, y: 35 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.75, delay: 0.1 }} className="relative">
+
+            <motion.div
+              initial={{ opacity: 0, y: 35 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.75, delay: 0.1 }}
+              className="mx-auto mt-12 max-w-5xl"
+            >
               <div className="overflow-hidden rounded-3xl border border-slate-700 bg-slate-900 shadow-[0_30px_60px_-25px_rgba(14,165,233,0.55)]">
                 <img src={heroImage} alt="Editor visual de FunnelCOD" className="h-full w-full object-cover" />
               </div>
             </motion.div>
+
+            <div className="mx-auto mt-8 grid max-w-5xl gap-3 sm:grid-cols-3">
+              {t.hero.stats.map(([value, label]) => (
+                <div key={label} className="rounded-xl border border-slate-800 bg-slate-900/70 p-3 text-center">
+                  <p className="text-xl font-bold text-cyan-300">{value}</p>
+                  <p className="mt-1 text-xs text-slate-400">{label}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -644,12 +664,12 @@ export default function LandingPage() {
           </div>
         </section>
 
-                <section id="testimonials" className="px-4 py-24 sm:px-6">
+        <section id="testimonials" className="px-4 py-24 sm:px-6">
           <div className="mx-auto max-w-6xl">
             <div className="text-center">
               <p className="text-sm font-semibold uppercase tracking-wider text-cyan-300/90">{t.nav.testimonials}</p>
               <h2 className="mt-2 text-3xl font-bold text-white md:text-4xl">
-                {language === "es" ? "Historias reales de tiendas que venden mas" : "Real stories from stores selling more"}
+                {language === "es" ? "Historias reales de tiendas que venden más" : "Real stories from stores selling more"}
               </h2>
               <p className="mt-3 text-sm text-slate-300">
                 {language === "es" ? "Desliza o usa las flechas para navegar" : "Swipe or use arrows to navigate"}
@@ -666,6 +686,7 @@ export default function LandingPage() {
                   variant="outline"
                   className="h-9 w-9 border-slate-700 bg-slate-900 text-slate-100 hover:bg-slate-800"
                   onClick={() => moveTestimonials("left")}
+                  aria-label={language === "es" ? "Mover testimonios a la izquierda" : "Move testimonials left"}
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
@@ -675,17 +696,22 @@ export default function LandingPage() {
                   variant="outline"
                   className="h-9 w-9 border-slate-700 bg-slate-900 text-slate-100 hover:bg-slate-800"
                   onClick={() => moveTestimonials("right")}
+                  aria-label={language === "es" ? "Mover testimonios a la derecha" : "Move testimonials right"}
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
 
-              <div ref={testimonialsRef} className="overflow-x-auto pb-4 scroll-smooth">
+              <div
+                ref={testimonialsRef}
+                className="overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory"
+                aria-label={language === "es" ? "Carrusel de testimonios" : "Testimonials carousel"}
+              >
                 <div className="flex w-max min-w-full gap-4 pr-4">
-                  {stories.map(([name, user, text, likes], index) => (
+                  {stories.map(([name, role, user, text, likes], index) => (
                     <InstagramCard
                       key={user}
-                      item={{ name, user, text, likes, image: AVATARS[index % AVATARS.length] }}
+                      item={{ name, role, user, text, likes, image: AVATARS[index % AVATARS.length] }}
                     />
                   ))}
                 </div>
@@ -693,16 +719,17 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+
         <section id="pricing" className="px-4 py-24 sm:px-6">
           <div className="mx-auto max-w-6xl rounded-[2rem] border border-slate-800 bg-slate-900/60 p-7 md:p-10">
             <div className="text-center">
               <p className="text-sm font-semibold uppercase tracking-wider text-cyan-300/90">{t.nav.pricing}</p>
               <h2 className="mt-2 text-3xl font-bold text-white md:text-4xl">
-                {language === "es" ? "Planes pensados para Peru y Latam" : "Plans designed for Peru and Latam"}
+                {language === "es" ? "Planes pensados para Perú y Latam" : "Plans designed for Peru and Latam"}
               </h2>
               <p className="mx-auto mt-3 max-w-3xl text-slate-300">
                 {language === "es"
-                  ? "Precios regionales y alcance realista segun las funciones actuales del producto."
+                  ? "Precios regionales y alcance realista según las funciones actuales del producto."
                   : "Regional pricing and realistic scope based on the current product features."}
               </p>
             </div>
@@ -778,7 +805,7 @@ export default function LandingPage() {
             </Accordion>
           </div>
         </section>
-</main>
+      </main>
 
       <footer className="border-t border-slate-800 px-4 py-8 sm:px-6">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 text-center sm:flex-row sm:text-left">
@@ -796,11 +823,3 @@ export default function LandingPage() {
     </div>
   );
 }
-
-
-
-
-
-
-
-

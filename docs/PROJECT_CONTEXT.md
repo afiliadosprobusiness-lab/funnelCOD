@@ -56,11 +56,12 @@ Ver contrato detallado en `docs/contract.md`.
 4. Capturar orden COD desde formulario -> guardar en `cod_orders`.
 5. Gestionar ordenes en `/orders` (filtro + cambio de estado).
 6. Landing en dark mode con selector de idioma (`es/en`), anchors funcionales, testimonios con scroll horizontal manual y FAQ en acordeon.
+7. Las tarjetas de testimonios muestran nombre, cargo y handle, con contenido orientado a uso real del producto.
 
 ## Integraciones y env vars
 
 - No hay backend/API activa.
-- Landing usa SVGs locales para bloques visuales y avatares externos con fallback local.
+- Landing usa una imagen hero local, imagenes referenciales externas para features/testimonios y fallbacks locales.
 - No hay variables de entorno requeridas.
 - React Query esta montado, pero sin queries/mutations implementadas.
 

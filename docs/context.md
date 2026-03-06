@@ -44,6 +44,7 @@ There is no backend/API integration in the current version.
 - Keys:
   - `cod_funnels`
   - `cod_orders`
+  - `funnelcod_lang` (optional landing language preference)
 - Main state in pages is React local state hydrated from `localStorage`.
 
 ## 4) Routes and navigation
@@ -92,14 +93,14 @@ Core entities:
 1. User enters `/` and sees dark-mode landing with strong CTA.
 2. Navbar links (`features`, `how-it-works`, `testimonials`, `pricing`, `faq`) scroll smoothly to sections.
 3. Language selector toggles `es/en` copy across all landing sections and persists preference in `localStorage` under `funnelcod_lang`.
-4. Testimonials are displayed as social-style cards in a horizontal scroller with left/right controls (no visual duplication).
+4. Testimonials are displayed as social-style cards in a horizontal scroller with left/right controls (no visual duplication), including role under each name.
 5. Pricing section is structured as 4 cards (`Basic`, `Pro`, `Advanced`, `Enterprise`) aligned to current scope and Peru/Latam positioning.
 6. FAQ section uses accordion interaction with expanded question set.
 
 ## 7) External integrations and env vars
 
 - No external API calls.
-- Landing uses local SVG visuals for core feature blocks and external avatar photos with local fallback.
+- Landing uses a local hero image, external referential feature/testimonial images, and local fallback assets.
 - No required environment variables.
 - React Query provider exists but no active `useQuery` / `useMutation` usage yet.
 
