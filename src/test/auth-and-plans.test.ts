@@ -1,5 +1,16 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { deleteUser, ensureAuthSeed, getUsers, registerWithPassword, updateUserPlan, updateUserStatus } from "@/store/auth-store";
+import {
+  SUPERADMIN_DEFAULT_PASSWORD,
+  SUPERADMIN_EMAIL,
+  deleteUser,
+  ensureAuthSeed,
+  getCurrentUser,
+  getUsers,
+  loginWithPassword,
+  registerWithPassword,
+  updateUserPlan,
+  updateUserStatus,
+} from "@/store/auth-store";
 import { canPublishByPlan } from "@/lib/plans";
 import { createFunnel, setFunnelPublishState } from "@/store/funnel-store";
 
@@ -82,5 +93,20 @@ describe("auth and plan rules", () => {
       userPlan: "pro",
     });
     expect(thirdResult.ok).toBe(false);
+  });
+
+  it("returns a stable user snapshot when auth storage has not changed", () => {
+    ensureAuthSeed();
+    const loginResult = loginWithPassword({
+      email: SUPERADMIN_EMAIL,
+      password: SUPERADMIN_DEFAULT_PASSWORD,
+    });
+    expect(loginResult.ok).toBe(true);
+
+    const firstSnapshot = getCurrentUser();
+    const secondSnapshot = getCurrentUser();
+
+    expect(firstSnapshot).toBeTruthy();
+    expect(secondSnapshot).toBe(firstSnapshot);
   });
 });

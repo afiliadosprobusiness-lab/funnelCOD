@@ -15,6 +15,7 @@ FunnelCOD es una app frontend (Vite + React + TS) para crear funnels COD, public
 - zod para validacion del formulario COD
 - Vitest (con pruebas criticas de auth/planes)
 - Plugin de build activo: `@vitejs/plugin-react-swc`
+- Deploy en hosting: Firebase Hosting (CLI)
 
 ## Arquitectura
 
@@ -73,6 +74,9 @@ Ver detalle mecanico en `docs/contract.md`.
 
 - Sin backend/API activa.
 - Google Identity Services opcional para login con Google.
+- Firebase Hosting conectado por CLI:
+  - Proyecto: `funnelcod-20260306`
+  - Archivos: `.firebaserc`, `firebase.json`
 - Env var opcional:
   - `VITE_GOOGLE_CLIENT_ID` (documentado en `.env.example`).
 

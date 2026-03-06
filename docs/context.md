@@ -26,6 +26,7 @@ The project remains frontend-only (no backend API).
 - IDs: uuid
 - Testing: Vitest + Testing Library
 - Build plugins: `@vitejs/plugin-react-swc`
+- Deploy hosting: Firebase Hosting (CLI)
 
 ## 3) Runtime architecture
 
@@ -119,6 +120,9 @@ Plans:
 
 - No backend/API calls.
 - Optional Google Identity Services integration for sign-in button.
+- Firebase Hosting configured for SPA deploy/rewrite.
+  - Firebase project id: `funnelcod-20260306`
+  - Config files: `.firebaserc`, `firebase.json`
 - Optional env var:
   - `VITE_GOOGLE_CLIENT_ID`
 - Landing uses a local hero image and external referential images with fallbacks.

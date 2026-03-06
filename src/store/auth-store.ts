@@ -10,6 +10,14 @@ const SUPERADMIN_ID = "superadmin-root";
 export const SUPERADMIN_EMAIL = "superadmin@funnelcod.local";
 export const SUPERADMIN_DEFAULT_PASSWORD = "SuperAdmin#2026";
 
+type CurrentUserCache = {
+  usersRaw: string | null;
+  sessionRaw: string | null;
+  user: AppUser | null;
+};
+
+let currentUserCache: CurrentUserCache | null = null;
+
 function encodePassword(password: string): string {
   const bytes = new TextEncoder().encode(password);
   const normalized = Array.from(bytes, (item) => String.fromCharCode(item)).join("");
@@ -31,17 +39,24 @@ function emitAuthChange() {
   }
 }
 
+function invalidateCurrentUserCache() {
+  currentUserCache = null;
+}
+
 function saveUsers(users: AppUser[]) {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  invalidateCurrentUserCache();
 }
 
 function saveSession(session: AuthSession | null) {
   if (!session) {
     localStorage.removeItem(SESSION_KEY);
+    invalidateCurrentUserCache();
     emitAuthChange();
     return;
   }
   localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  invalidateCurrentUserCache();
   emitAuthChange();
 }
 
@@ -90,27 +105,31 @@ export function getUsers(): AppUser[] {
   return safeParse<AppUser[]>(localStorage.getItem(USERS_KEY), []);
 }
 
-function getSession(): AuthSession | null {
-  return safeParse<AuthSession | null>(localStorage.getItem(SESSION_KEY), null);
-}
-
-export function getCurrentUser(): AppUser | null {
-  ensureAuthSeed();
-  const session = getSession();
+function resolveCurrentUserFromRaw(usersRaw: string | null, sessionRaw: string | null): AppUser | null {
+  const session = safeParse<AuthSession | null>(sessionRaw, null);
   if (!session?.userId) return null;
 
-  const current = getUsers().find((user) => user.id === session.userId) || null;
-  if (!current) {
-    saveSession(null);
-    return null;
-  }
-
-  if (current.status !== "active") {
-    saveSession(null);
+  const users = safeParse<AppUser[]>(usersRaw, []);
+  const current = users.find((user) => user.id === session.userId) || null;
+  if (!current || current.status !== "active") {
     return null;
   }
 
   return current;
+}
+
+export function getCurrentUser(): AppUser | null {
+  ensureAuthSeed();
+  const usersRaw = localStorage.getItem(USERS_KEY);
+  const sessionRaw = localStorage.getItem(SESSION_KEY);
+
+  if (currentUserCache && currentUserCache.usersRaw === usersRaw && currentUserCache.sessionRaw === sessionRaw) {
+    return currentUserCache.user;
+  }
+
+  const user = resolveCurrentUserFromRaw(usersRaw, sessionRaw);
+  currentUserCache = { usersRaw, sessionRaw, user };
+  return user;
 }
 
 export function isSuperadmin(user: AppUser | null | undefined): boolean {
@@ -118,6 +137,9 @@ export function isSuperadmin(user: AppUser | null | undefined): boolean {
 }
 
 export function subscribeAuthState(listener: () => void): () => void {
+  if (typeof window === "undefined") {
+    return () => undefined;
+  }
   const wrappedStorageListener = () => listener();
   window.addEventListener(AUTH_EVENT, listener);
   window.addEventListener("storage", wrappedStorageListener);
