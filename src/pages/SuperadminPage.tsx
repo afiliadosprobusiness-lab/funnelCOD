@@ -77,9 +77,6 @@ export default function SuperadminPage() {
           <Badge className="ml-auto" variant="secondary">
             {activeUsers}/{users.length} active
           </Badge>
-          <Button variant="outline" size="sm" onClick={() => navigate("/dashboard")}>
-            Dashboard
-          </Button>
           <Button
             variant="ghost"
             size="sm"
