@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="Editor visual">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#020617" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="card" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b223d" />
+      <stop offset="100%" stop-color="#102944" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="760" rx="38" fill="url(#bg)" />
+  <rect x="45" y="45" width="1110" height="670" rx="28" fill="#07122a" stroke="#2d4e7c" />
+  <rect x="80" y="90" width="250" height="580" rx="18" fill="url(#card)" stroke="#395f95" />
+  <rect x="360" y="90" width="760" height="580" rx="18" fill="#0f223a" stroke="#395f95" />
+  <rect x="390" y="130" width="700" height="80" rx="12" fill="#12355f" />
+  <rect x="390" y="235" width="480" height="350" rx="16" fill="#152f4f" />
+  <circle cx="470" cy="420" r="110" fill="#1d4f80" opacity="0.7" />
+  <rect x="900" y="260" width="170" height="210" rx="14" fill="#17395e" />
+  <rect x="105" y="135" width="200" height="52" rx="10" fill="#163759" />
+  <rect x="105" y="205" width="200" height="52" rx="10" fill="#173f67" />
+  <rect x="105" y="275" width="200" height="52" rx="10" fill="#1a4878" />
+  <text x="100" y="64" fill="#e2e8f0" font-family="Inter, Arial" font-size="30" font-weight="700">Editor visual</text>
+</svg>

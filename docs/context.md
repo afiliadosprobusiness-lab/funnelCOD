@@ -92,12 +92,14 @@ Core entities:
 1. User enters `/` and sees dark-mode landing with strong CTA.
 2. Navbar links (`features`, `how-it-works`, `testimonials`, `pricing`, `faq`) scroll smoothly to sections.
 3. Language selector toggles `es/en` copy across all landing sections and persists preference in `localStorage` under `funnelcod_lang`.
-4. Testimonials are displayed as auto-scrolling social-style cards (left and right marquee rows).
+4. Testimonials are displayed as social-style cards in a horizontal scroller with left/right controls (no visual duplication).
+5. Pricing section is structured as 4 cards (`Basic`, `Pro`, `Advanced`, `Enterprise`) aligned to current scope and Peru/Latam positioning.
+6. FAQ section uses accordion interaction with expanded question set.
 
 ## 7) External integrations and env vars
 
 - No external API calls.
-- Landing uses public CDN images (Unsplash URLs) for feature/testimonial visuals.
+- Landing uses local SVG visuals for core feature blocks and external avatar photos with local fallback.
 - No required environment variables.
 - React Query provider exists but no active `useQuery` / `useMutation` usage yet.
 
@@ -105,7 +107,8 @@ Core entities:
 
 - Test setup exists (`vitest.config.ts`, `src/test/setup.ts`).
 - Current test coverage is effectively placeholder (`src/test/example.test.ts`).
-- `node_modules` was not installed during this audit; runtime build/tests not executed in this pass.
+- Build was executed successfully (`npm run build`) after landing updates.
+- Tests were executed successfully (`npm run test`).
 
 ## 9) Known constraints and technical notes
 

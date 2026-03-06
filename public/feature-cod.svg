@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="Formulario COD">
+  <defs>
+    <linearGradient id="bgCod" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#020617" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="760" rx="38" fill="url(#bgCod)" />
+  <rect x="250" y="60" width="700" height="640" rx="36" fill="#0b2037" stroke="#315887" />
+  <rect x="290" y="125" width="620" height="70" rx="14" fill="#163f69" />
+  <rect x="290" y="220" width="620" height="70" rx="14" fill="#15385d" />
+  <rect x="290" y="315" width="620" height="70" rx="14" fill="#143552" />
+  <rect x="290" y="410" width="620" height="70" rx="14" fill="#12314a" />
+  <rect x="290" y="520" width="620" height="95" rx="18" fill="#2563eb" />
+  <circle cx="330" cy="670" r="8" fill="#94a3b8" />
+  <circle cx="370" cy="670" r="8" fill="#94a3b8" />
+  <circle cx="410" cy="670" r="8" fill="#94a3b8" />
+  <text x="290" y="95" fill="#e2e8f0" font-family="Inter, Arial" font-size="30" font-weight="700">Formulario COD</text>
+</svg>

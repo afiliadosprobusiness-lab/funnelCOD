@@ -55,12 +55,12 @@ Ver contrato detallado en `docs/contract.md`.
 3. Publicar funnel -> disponible en `/f/:slug`.
 4. Capturar orden COD desde formulario -> guardar en `cod_orders`.
 5. Gestionar ordenes en `/orders` (filtro + cambio de estado).
-6. Landing en dark mode con selector de idioma (`es/en`), anchors funcionales y testimonios en scroll continuo.
+6. Landing en dark mode con selector de idioma (`es/en`), anchors funcionales, testimonios con scroll horizontal manual y FAQ en acordeon.
 
 ## Integraciones y env vars
 
 - No hay backend/API activa.
-- Landing consume imagenes publicas CDN (Unsplash) para bloques visuales.
+- Landing usa SVGs locales para bloques visuales y avatares externos con fallback local.
 - No hay variables de entorno requeridas.
 - React Query esta montado, pero sin queries/mutations implementadas.
 
