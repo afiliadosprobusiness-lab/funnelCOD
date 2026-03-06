@@ -39,6 +39,9 @@ export default function AuthPage() {
     confirmPassword: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const fieldLabelClassName = "text-sm font-medium text-slate-200";
+  const fieldInputClassName =
+    "border-slate-700 bg-slate-950/70 text-slate-100 placeholder:text-slate-500 focus-visible:ring-cyan-400";
 
   const redirectPath = useMemo(() => {
     const state = (location.state || {}) as RedirectState;
@@ -127,17 +130,18 @@ export default function AuthPage() {
           <CardHeader>
             <CardTitle className="text-2xl text-white">Access your account</CardTitle>
             <CardDescription className="text-slate-300">
-              Login with Google or register with email and password.
+              Login with Google or create your account with name, email and password.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="grid w-full grid-cols-2 bg-slate-800 text-slate-300">
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="register">Register</TabsTrigger>
+                <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
+                <TabsTrigger value="register">Crear cuenta</TabsTrigger>
               </TabsList>
 
               <TabsContent value="login" className="space-y-4 pt-4">
+                <p className="text-xs font-medium uppercase tracking-[0.12em] text-slate-400">Continuar con Google</p>
                 <GoogleSignInButton
                   onSuccess={handleGoogleLogin}
                   onError={(message) => toast({ title: "Google login error", description: message, variant: "destructive" })}
@@ -146,26 +150,35 @@ export default function AuthPage() {
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t border-slate-700" />
                   </div>
-                  <p className="relative mx-auto w-fit bg-slate-900 px-2 text-xs text-slate-400">or</p>
+                  <p className="relative mx-auto w-fit bg-slate-900 px-2 text-xs text-slate-400">o con correo</p>
                 </div>
                 <form className="space-y-3" onSubmit={handleLoginSubmit}>
+                  <p className="text-xs text-slate-400">Ingresa tu correo y contraseña para continuar.</p>
                   <div className="space-y-1.5">
-                    <Label htmlFor="login-email">Email</Label>
+                    <Label htmlFor="login-email" className={fieldLabelClassName}>
+                      Correo electrónico
+                    </Label>
                     <Input
                       id="login-email"
                       type="email"
                       autoComplete="email"
+                      className={fieldInputClassName}
+                      placeholder="tu-correo@ejemplo.com"
                       value={loginForm.email}
                       onChange={(event) => setLoginForm((prev) => ({ ...prev, email: event.target.value }))}
                       required
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="login-password">Password</Label>
+                    <Label htmlFor="login-password" className={fieldLabelClassName}>
+                      Contraseña
+                    </Label>
                     <Input
                       id="login-password"
                       type="password"
                       autoComplete="current-password"
+                      className={fieldInputClassName}
+                      placeholder="Tu contraseña"
                       value={loginForm.password}
                       onChange={(event) => setLoginForm((prev) => ({ ...prev, password: event.target.value }))}
                       required
@@ -178,6 +191,7 @@ export default function AuthPage() {
               </TabsContent>
 
               <TabsContent value="register" className="space-y-4 pt-4">
+                <p className="text-xs font-medium uppercase tracking-[0.12em] text-slate-400">Continuar con Google</p>
                 <GoogleSignInButton
                   onSuccess={handleGoogleLogin}
                   onError={(message) => toast({ title: "Google login error", description: message, variant: "destructive" })}
@@ -186,47 +200,64 @@ export default function AuthPage() {
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t border-slate-700" />
                   </div>
-                  <p className="relative mx-auto w-fit bg-slate-900 px-2 text-xs text-slate-400">or</p>
+                  <p className="relative mx-auto w-fit bg-slate-900 px-2 text-xs text-slate-400">o con correo</p>
                 </div>
                 <form className="space-y-3" onSubmit={handleRegisterSubmit}>
+                  <p className="text-xs text-slate-400">Completa nombre, correo y contraseña para crear tu cuenta.</p>
                   <div className="space-y-1.5">
-                    <Label htmlFor="register-name">Name</Label>
+                    <Label htmlFor="register-name" className={fieldLabelClassName}>
+                      Nombre completo
+                    </Label>
                     <Input
                       id="register-name"
                       autoComplete="name"
+                      className={fieldInputClassName}
+                      placeholder="Tu nombre completo"
                       value={registerForm.name}
                       onChange={(event) => setRegisterForm((prev) => ({ ...prev, name: event.target.value }))}
                       required
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="register-email">Email</Label>
+                    <Label htmlFor="register-email" className={fieldLabelClassName}>
+                      Correo electrónico
+                    </Label>
                     <Input
                       id="register-email"
                       type="email"
                       autoComplete="email"
+                      className={fieldInputClassName}
+                      placeholder="tu-correo@ejemplo.com"
                       value={registerForm.email}
                       onChange={(event) => setRegisterForm((prev) => ({ ...prev, email: event.target.value }))}
                       required
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="register-password">Password</Label>
+                    <Label htmlFor="register-password" className={fieldLabelClassName}>
+                      Contraseña
+                    </Label>
                     <Input
                       id="register-password"
                       type="password"
                       autoComplete="new-password"
+                      className={fieldInputClassName}
+                      placeholder="Crea una contraseña"
                       value={registerForm.password}
                       onChange={(event) => setRegisterForm((prev) => ({ ...prev, password: event.target.value }))}
                       required
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="register-password-confirm">Confirm password</Label>
+                    <Label htmlFor="register-password-confirm" className={fieldLabelClassName}>
+                      Confirmar contraseña
+                    </Label>
                     <Input
                       id="register-password-confirm"
                       type="password"
                       autoComplete="new-password"
+                      className={fieldInputClassName}
+                      placeholder="Repite tu contraseña"
                       value={registerForm.confirmPassword}
                       onChange={(event) => setRegisterForm((prev) => ({ ...prev, confirmPassword: event.target.value }))}
                       required

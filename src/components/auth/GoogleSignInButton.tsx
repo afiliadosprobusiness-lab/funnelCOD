@@ -57,10 +57,31 @@ export default function GoogleSignInButton({ onSuccess, onError }: GoogleSignInB
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
+  const isDev = import.meta.env.DEV;
+
+  const handleDevGoogleSignIn = () => {
+    const email = window.prompt("Correo de Google (modo desarrollo):", "");
+    if (!email) return;
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail.includes("@")) {
+      onError("Email inválido. Ingresa un correo de Google válido.");
+      return;
+    }
+    const suggestedName = normalizedEmail.split("@")[0];
+    const name = window.prompt("Nombre visible:", suggestedName) || suggestedName;
+    onSuccess({
+      email: normalizedEmail,
+      name: name.trim() || suggestedName,
+    });
+  };
 
   useEffect(() => {
     if (!clientId) {
-      setErrorMessage("Define VITE_GOOGLE_CLIENT_ID to enable Google sign-in.");
+      if (!isDev) {
+        setErrorMessage("Define VITE_GOOGLE_CLIENT_ID to enable Google sign-in.");
+      } else {
+        setErrorMessage(null);
+      }
       return;
     }
 
@@ -123,12 +144,27 @@ export default function GoogleSignInButton({ onSuccess, onError }: GoogleSignInB
       script.removeEventListener("load", onLoad);
       script.removeEventListener("error", onErrorScript);
     };
-  }, [clientId, onError, onSuccess]);
+  }, [clientId, isDev, onError, onSuccess]);
 
   return (
     <div className="space-y-2">
-      <div ref={containerRef} className="flex min-h-10 justify-center sm:justify-start" />
+      {clientId ? (
+        <div ref={containerRef} className="flex min-h-10 justify-center sm:justify-start" />
+      ) : isDev ? (
+        <button
+          type="button"
+          onClick={handleDevGoogleSignIn}
+          className="inline-flex h-11 w-full items-center justify-center rounded-xl border border-slate-600 bg-slate-800/70 px-4 text-sm font-medium text-slate-100 transition hover:bg-slate-700"
+        >
+          Continuar con Google (modo desarrollo)
+        </button>
+      ) : null}
       {errorMessage && <p className="text-xs text-amber-600">{errorMessage}</p>}
+      {!clientId && isDev ? (
+        <p className="text-xs text-amber-400">
+          Falta `VITE_GOOGLE_CLIENT_ID`. Se habilitó un acceso rápido local para pruebas.
+        </p>
+      ) : null}
     </div>
   );
 }
