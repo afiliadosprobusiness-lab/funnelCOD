@@ -9,7 +9,10 @@ export type ElementType =
   | 'product-price'
   | 'product-image'
   | 'order-button'
-  | 'cod-order-form';
+  | 'cod-order-form'
+  | 'trust-badges'
+  | 'testimonial'
+  | 'features-list';
 
 export interface FunnelElement {
   id: string;

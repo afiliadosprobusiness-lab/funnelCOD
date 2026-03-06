@@ -26,11 +26,16 @@ export function createDefaultPage(type: FunnelPage['type'], name: string): Funne
   
   const defaultElements: Record<string, FunnelElement[]> = {
     product: [
-      { id: uuid(), type: 'headline', content: 'Amazing Product', props: { level: 'h1', align: 'center' } },
+      { id: uuid(), type: 'headline', content: '🔥 Limited Offer - Order Now!', props: { level: 'h3', align: 'center', color: '#dc2626', fontSize: 18 } },
+      { id: uuid(), type: 'headline', content: 'Amazing Product', props: { level: 'h1', align: 'center', fontSize: 36 } },
       { id: uuid(), type: 'product-image', props: { src: '', alt: 'Product' } },
-      { id: uuid(), type: 'paragraph', content: 'This product will change your life. Order now with Cash on Delivery!', props: { align: 'center' } },
-      { id: uuid(), type: 'product-price', props: { price: 29.99, currency: '$' } },
-      { id: uuid(), type: 'order-button', content: 'Order Now - COD', props: { align: 'center' } },
+      { id: uuid(), type: 'paragraph', content: 'This product will change your life. Premium quality with guaranteed satisfaction. Order now with Cash on Delivery!', props: { align: 'center' } },
+      { id: uuid(), type: 'features-list', props: { items: ['✅ Free Shipping', '✅ 30-Day Money Back Guarantee', '✅ Premium Quality Materials', '✅ Fast Delivery (2-5 days)'] } },
+      { id: uuid(), type: 'product-price', props: { price: 29.99, currency: '$', originalPrice: 59.99 } },
+      { id: uuid(), type: 'countdown', props: { hours: 2, minutes: 30, seconds: 0 } },
+      { id: uuid(), type: 'order-button', content: '🛒 Order Now - Cash on Delivery', props: { align: 'center', bgColor: '#2563eb', textColor: '#ffffff' } },
+      { id: uuid(), type: 'trust-badges', props: {} },
+      { id: uuid(), type: 'testimonial', props: { name: 'Sarah K.', text: 'Amazing product! Received it in 3 days. Totally worth it!', rating: 5 } },
     ],
     order: [
       { id: uuid(), type: 'headline', content: 'Complete Your Order', props: { level: 'h2', align: 'center' } },
@@ -136,17 +141,20 @@ export function updateOrderStatus(orderId: string, status: Order['status']) {
 
 export function createElement(type: FunnelElement['type']): FunnelElement {
   const defaults: Record<string, Partial<FunnelElement>> = {
-    headline: { content: 'Your Headline Here', props: { level: 'h2', align: 'left' } },
-    paragraph: { content: 'Enter your text here...', props: { align: 'left' } },
+    headline: { content: 'Your Headline Here', props: { level: 'h2', align: 'center', fontSize: 28 } },
+    paragraph: { content: 'Enter your text here. Write compelling copy that converts visitors into buyers.', props: { align: 'center' } },
     image: { props: { src: '', alt: 'Image', width: '100%' } },
-    button: { content: 'Click Me', props: { align: 'center', variant: 'primary' } },
+    button: { content: 'Click Me', props: { align: 'center', bgColor: '#2563eb', textColor: '#ffffff' } },
     spacer: { props: { height: 40 } },
     video: { props: { url: '', type: 'youtube' } },
     countdown: { props: { hours: 2, minutes: 0, seconds: 0 } },
     'product-price': { props: { price: 29.99, currency: '$', originalPrice: 49.99 } },
     'product-image': { props: { src: '', alt: 'Product' } },
-    'order-button': { content: 'Order Now - Cash on Delivery', props: { align: 'center' } },
+    'order-button': { content: '🛒 Order Now - Cash on Delivery', props: { align: 'center', bgColor: '#2563eb', textColor: '#ffffff' } },
     'cod-order-form': { props: {} },
+    'trust-badges': { props: {} },
+    'testimonial': { props: { name: 'Happy Customer', text: 'Great product! Highly recommended.', rating: 5 } },
+    'features-list': { props: { items: ['✅ Feature 1', '✅ Feature 2', '✅ Feature 3'] } },
   };
   const def = defaults[type] || {};
   return { id: uuid(), type, content: def.content, props: def.props || {} };
