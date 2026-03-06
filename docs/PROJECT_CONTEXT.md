@@ -68,7 +68,7 @@ Ver detalle mecanico en `docs/contract.md`.
 5. Captura de orden COD en `/f/:slug` -> guarda pedido con owner.
 6. Gestion de pedidos en `/orders`.
 7. Superadmin en `/superadmin`: activar/desactivar usuarios y cambiar planes (no eliminable/desactivable).
-8. Landing: orden visual principal actualizado a Hero -> Testimonios -> Features -> How it works -> Pricing -> FAQ.
+8. Landing: orden visual principal actualizado a Hero -> Testimonios -> Features -> How it works -> Pricing -> FAQ + CTA final.
 
 ## Integraciones y env vars
 

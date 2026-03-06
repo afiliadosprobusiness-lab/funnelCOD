@@ -115,6 +115,7 @@ Plans:
 ### Landing marketing flow
 1. User sees hero first and immediately after that the testimonials carousel.
 2. Then the page continues with features, how-it-works, pricing, and FAQ sections.
+3. FAQ closes with a final CTA block to drive sign-up/start actions.
 
 ## 7) External integrations and env vars
 
